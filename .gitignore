@@ -1,0 +1,9 @@
+backend/.env
+frontend/.env
+**/node_modules/
+**/dist/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+backend/staticfiles/
+backend/media/
