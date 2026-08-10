@@ -2,7 +2,7 @@ import { asyncHandler } from '../utils/asyncHandler.js'
 import { failure, success } from '../utils/response.js'
 import { buildSearchClause, paginate, withTransaction } from '../services/dbHelpers.js'
 
-const baseFields = 'id, name, mobile_number, email, business_name, gst_number, customer_type, address, status, follow_up_date, notes, created_by, created_at, updated_at'
+const baseFields = 'id, name, mobile_number, email, business_name, gst_number, customer_type, address, status, follow_up_date, notes, created_by_id AS created_by, created_at, updated_at'
 
 function normalizeCustomer(row) {
   return row
