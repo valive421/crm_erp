@@ -2,12 +2,11 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const navGroups = [
-  { label: 'Dashboard', to: '/dashboard', roles: ['ADMIN', 'SALES', 'WAREHOUSE', 'ACCOUNTS'] },
-  { label: 'Customers', to: '/customers', roles: ['ADMIN', 'SALES', 'ACCOUNTS'] },
-  { label: 'Products', to: '/products', roles: ['ADMIN', 'WAREHOUSE', 'ACCOUNTS', 'SALES'] },
-  { label: 'Inventory', to: '/inventory', roles: ['ADMIN', 'WAREHOUSE'] },
-  { label: 'Challans', to: '/challans', roles: ['ADMIN', 'SALES', 'ACCOUNTS', 'WAREHOUSE'] },
-  { label: 'Profile', to: '/profile', roles: ['ADMIN', 'SALES', 'WAREHOUSE', 'ACCOUNTS'] },
+  { label: 'Inventory', to: '/inventory', roles: ['ADMIN', 'OPERATIONS'] },
+  { label: 'Work Orders', to: '/work-orders', roles: ['ADMIN', 'OPERATIONS'] },
+  { label: 'Internal Transfers', to: '/transfers', roles: ['ADMIN', 'OPERATIONS'] },
+  { label: 'Customer Orders', to: '/orders', roles: ['ADMIN', 'SALES'] },
+  { label: 'Profile', to: '/profile', roles: ['ADMIN', 'SALES', 'OPERATIONS'] },
 ]
 
 export default function AppLayout() {
@@ -25,7 +24,7 @@ export default function AppLayout() {
     <div className="app-shell">
       <aside className="sidebar">
         <div>
-          <div className="brand">Mini ERP CRM</div>
+          <div className="brand">Mini Operations ERP</div>
           <div className="sidebar-subtitle">Operations Portal</div>
         </div>
         <nav className="nav-list">
@@ -40,7 +39,7 @@ export default function AppLayout() {
       <div className="main-panel">
         <header className="topbar">
           <div>
-            <h1>Wholesale Distribution ERP</h1>
+            <h1>Operations ERP</h1>
             <p>Role: {user?.role}</p>
           </div>
           <div className="user-chip">{user?.username}</div>

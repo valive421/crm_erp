@@ -7,7 +7,7 @@ const refreshTokens = new Map()
 
 // The demo keeps refresh tokens in memory so the API can rotate and revoke them.
 export async function findUserByUsername(username) {
-  const result = await query('SELECT id, username, password, first_name, last_name, email, role, is_active FROM accounts_user WHERE username = $1 LIMIT 1', [username])
+  const result = await query('SELECT id, username, password_hash AS password, first_name, last_name, email, role, is_active FROM users WHERE username = $1 LIMIT 1', [username])
   return result.rows[0] || null
 }
 
@@ -54,6 +54,6 @@ export function verifyAccessToken(token) {
 
 // The frontend uses /auth/me to hydrate the active session after refresh.
 export async function getCurrentUser(userId) {
-  const result = await query('SELECT id, username, first_name, last_name, email, role, is_active FROM accounts_user WHERE id = $1 LIMIT 1', [userId])
+  const result = await query('SELECT id, username, first_name, last_name, email, role, is_active FROM users WHERE id = $1 LIMIT 1', [userId])
   return result.rows[0] || null
 }

@@ -1,13 +1,12 @@
-# Mini ERP + CRM Frontend
+# Mini Operations ERP Frontend
 
-React Vite frontend for the Mini ERP + CRM operations portal.
+React Vite frontend for the Mini Operations ERP portal.
 
 ## Features
-- Role-aware sidebar navigation
+- Role-aware operations navigation
 - JWT login and session hydration
-- Dashboard cards and tables
-- Customer, product, inventory, and challan screens
-- Responsive admin-style layout
+- Inventory, work order, transfer, and customer-order screens
+- Responsive operations layout
 
 ## Local Setup
 ```bash
@@ -21,7 +20,7 @@ npm run dev
 - `VITE_API_BASE_URL=http://localhost:8000/api`
 
 ## API Contract
-The frontend expects the Express backend under the `/api` prefix.
+The frontend expects the Express backend under the `/api` prefix. Operational screens are introduced incrementally across the project commits.
 
 ## Notes
 - Authentication tokens are stored in browser storage for the demo build.

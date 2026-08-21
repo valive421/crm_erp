@@ -27,7 +27,7 @@ export default function LoginPage() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <div className="brand large">Mini ERP CRM</div>
+        <div className="brand large">Mini Operations ERP</div>
         <h2>Secure access for operations teams</h2>
         <p>Sign in with your role-based demo account.</p>
         <form onSubmit={handleSubmit} className="stack-form">
