@@ -10,6 +10,9 @@ https://fronend-crm-erp.onrender.com
 ```text
 Inventory → Work Order → Stock Check → Internal Transfer / Shortage → Customer Reservation
 ```
+# Database schema
+<img width="1429" height="1038" alt="Untitled(1)" src="https://github.com/user-attachments/assets/67b54687-bd7c-465c-8eea-70ee4833284b" />
+
 
 ## Technology stack
 
