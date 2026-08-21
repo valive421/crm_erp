@@ -7,6 +7,7 @@ import { env } from './config/env.js'
 import { notFoundHandler, errorHandler } from './middleware/errorHandler.js'
 import authRoutes from './routes/authRoutes.js'
 import operationsMetaRoutes from './routes/operationsMetaRoutes.js'
+import inventoryRoutes from './routes/inventoryRoutes.js'
 
 const app = express()
 
@@ -26,6 +27,7 @@ app.get('/api/health', (request, response) => {
 // are added in subsequent development stages.
 app.use('/api/auth', authRoutes)
 app.use('/api/meta', operationsMetaRoutes)
+app.use('/api/inventory', inventoryRoutes)
 
 // 404 and error middleware must stay last so they catch all fallthroughs.
 app.use(notFoundHandler)

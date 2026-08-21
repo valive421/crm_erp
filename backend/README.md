@@ -28,6 +28,9 @@ npm run dev
 - `/api/meta/categories`
 - `/api/meta/locations`
 - `/api/meta/assignable-users`
+- `GET /api/inventory`
+- `GET /api/inventory/transactions`
+- `POST /api/inventory/adjustments`
 - `/api/health`
 
 ## Deployment Notes
@@ -37,4 +40,4 @@ npm run dev
 - Start with `npm start`
 
 ## Development Status
-This foundation commit provides the Operations ERP schema, authentication roles, and metadata APIs. Inventory transactions, work orders, internal transfers, and customer reservations follow in later development stages.
+The inventory stage provides location- and batch-level physical, reserved, and calculated available quantity. Manual adjustments are transactionally locked, cannot make available inventory negative, and require a unique idempotency key. Work orders, internal transfers, and customer reservations follow in later development stages.
