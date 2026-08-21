@@ -2,6 +2,9 @@
 
 A production-oriented full-stack Operations ERP for managing inventory across locations, work orders, internal transfers, and customer stock reservations.
 
+# Live Link
+https://fronend-crm-erp.onrender.com
+
 ## Business flow
 
 ```text
