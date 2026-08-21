@@ -4,7 +4,7 @@ import { createAdjustment, listInventory, listTransactions } from '../controller
 
 const router = Router()
 
-router.get('/', authenticate, authorize('OPERATIONS'), listInventory)
+router.get('/', authenticate, authorize('OPERATIONS', 'SALES'), listInventory)
 router.get('/transactions', authenticate, authorize('OPERATIONS'), listTransactions)
 router.post('/adjustments', authenticate, authorize('OPERATIONS'), createAdjustment)
 

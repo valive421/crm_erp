@@ -4,10 +4,10 @@ import AppLayout from './layouts/AppLayout'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage'
 import NotFoundPage from './pages/NotFoundPage'
-import OperationsPlaceholderPage from './pages/OperationsPlaceholderPage'
 import InventoryPage from './pages/InventoryPage'
 import WorkOrdersPage from './pages/WorkOrdersPage'
 import TransfersPage from './pages/TransfersPage'
+import CustomerOrdersPage from './pages/CustomerOrdersPage'
 
 export default function App() {
   return (
@@ -19,7 +19,7 @@ export default function App() {
           <Route path="/inventory" element={<InventoryPage />} />
           <Route path="/work-orders" element={<WorkOrdersPage />} />
           <Route path="/transfers" element={<TransfersPage />} />
-          <Route path="/orders" element={<OperationsPlaceholderPage module="Customer Orders" description="Sales reservations with transaction-safe available-stock checks will be delivered in the reservation stage." />} />
+          <Route path="/orders" element={<CustomerOrdersPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Route>

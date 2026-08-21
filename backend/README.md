@@ -11,8 +11,10 @@ Node.js and Express backend for the Mini Operations ERP portal.
 
 ## Commands
 ```bash
+npm run db:init
 npm run seed
 npm run dev
+npm test
 ```
 
 ## Demo Accounts
@@ -36,6 +38,8 @@ npm run dev
 - `GET, POST /api/transfers`
 - `POST /api/transfers/:id/dispatch`
 - `POST /api/transfers/:id/receive`
+- `GET, POST /api/orders`
+- `POST /api/orders/:id/cancel`
 - `/api/health`
 
 ## Deployment Notes
@@ -44,5 +48,16 @@ npm run dev
 - Run `npm run seed`
 - Start with `npm start`
 
-## Development Status
-The inventory stage provides location- and batch-level physical, reserved, and calculated available quantity. Manual adjustments are transactionally locked, cannot make available inventory negative, and require a unique idempotency key. Work orders calculate shortages from the selected location. Internal transfers reduce source stock only at dispatch and increase destination stock only at receipt. Customer reservations follow in the final development stage.
+## Business Rules
+- Available quantity is always `physical_quantity - reserved_quantity`.
+- Stock changes and reservations run in PostgreSQL transactions with row-level locks.
+- A transfer decreases source stock on dispatch and increases destination stock only on receipt.
+- A received transfer cannot be received again.
+- Sales reservations cannot exceed currently available inventory; cancelling a reserved order releases its quantity.
+
+## Tests
+Set `TEST_DATABASE_URL` to a disposable PostgreSQL database, then run `npm test`. The integration suite covers reservation limits, transfer limits, receipt timing, duplicate receipt prevention, and authorization.
+
+## Documentation
+- API contract: `docs/API.md`
+- ER diagram source: `docs/operations-erp.dbml`

@@ -1,0 +1,34 @@
+Table users {
+  id bigint [pk]
+  username varchar [unique, not null]
+  email varchar [unique, not null]
+  role varchar [not null, note: 'ADMIN, OPERATIONS, SALES']
+}
+
+Table categories { id bigint [pk]; name varchar [unique] }
+Table locations { id bigint [pk]; name varchar [unique]; address text }
+Table items { id bigint [pk]; sku varchar [unique]; name varchar; category_id bigint }
+Table batches { id bigint [pk]; item_id bigint; batch_code varchar }
+Table inventory { id bigint [pk]; item_id bigint; location_id bigint; batch_id bigint; physical_quantity numeric; reserved_quantity numeric }
+Table inventory_transactions { id bigint [pk]; inventory_id bigint; transaction_type varchar; quantity numeric; idempotency_key varchar [unique] }
+Table work_orders { id bigint [pk]; work_order_number varchar [unique]; location_id bigint; item_id bigint; assigned_user_id bigint; required_quantity numeric; status varchar }
+Table internal_transfers { id bigint [pk]; transfer_number varchar [unique]; source_location_id bigint; destination_location_id bigint; item_id bigint; batch_id bigint; quantity numeric; status varchar }
+Table customer_orders { id bigint [pk]; order_number varchar [unique]; customer_name varchar; status varchar; created_by_id bigint; idempotency_key varchar [unique] }
+Table customer_order_items { id bigint [pk]; customer_order_id bigint; inventory_id bigint; quantity numeric }
+
+Ref: items.category_id > categories.id
+Ref: batches.item_id > items.id
+Ref: inventory.item_id > items.id
+Ref: inventory.location_id > locations.id
+Ref: inventory.batch_id > batches.id
+Ref: inventory_transactions.inventory_id > inventory.id
+Ref: work_orders.location_id > locations.id
+Ref: work_orders.item_id > items.id
+Ref: work_orders.assigned_user_id > users.id
+Ref: internal_transfers.source_location_id > locations.id
+Ref: internal_transfers.destination_location_id > locations.id
+Ref: internal_transfers.item_id > items.id
+Ref: internal_transfers.batch_id > batches.id
+Ref: customer_orders.created_by_id > users.id
+Ref: customer_order_items.customer_order_id > customer_orders.id
+Ref: customer_order_items.inventory_id > inventory.id
