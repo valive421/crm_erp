@@ -1,5 +1,8 @@
 # Mini Operations ERP - Technical Documentation
 
+# Live Link
+https://fronend-crm-erp.onrender.com
+
 ## 1. Project purpose
 
 Mini Operations ERP is a multi-location inventory application for an operations team. It tracks material by item, location, and batch; calculates stock availability; lets Admin create work orders; lets Operations transfer stock; and lets Sales reserve stock for customer orders.
