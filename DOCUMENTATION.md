@@ -22,6 +22,9 @@ flowchart LR
   API --> LOGIC[Transactions and business rules]
   LOGIC --> DB[(PostgreSQL)]
 ```
+# Database schema
+<img width="1429" height="1038" alt="Untitled(1)" src="https://github.com/user-attachments/assets/657e2024-c836-4721-b7b6-3e94482fa2cb" />
+
 
 ### Technology choices
 
