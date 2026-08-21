@@ -16,7 +16,7 @@ export default function LoginPage() {
     setError('')
     try {
       await login(username, password)
-      navigate('/dashboard')
+      navigate('/inventory')
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed.')
     } finally {

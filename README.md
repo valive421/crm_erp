@@ -1,139 +1,108 @@
-# Mini ERP + CRM Operations Portal Documentation
+# Mini Operations ERP
 
-## Overview
-This repository implements a wholesale/distribution ERP and CRM portal with a React Vite frontend and a Node.js Express backend backed by PostgreSQL.
+A production-oriented full-stack Operations ERP for managing inventory across locations, work orders, internal transfers, and customer stock reservations.
 
-#Live link
-https://fronend-crm-erp.onrender.com
+## Business flow
 
-
-The system supports:
-- JWT authentication
-- Role-based access control
-- Customer CRM management
-- Product and warehouse management
-- Stock movement tracking
-- Sales challan draft/confirm/cancel flows
-- Product snapshots for challan history
-- Dashboard statistics
-
-## Architecture
-
-```mermaid
-flowchart TD
-  A[React Client\nVite + Axios] -->|HTTP/JSON| B[Express API\nJWT + Roles]
-  B --> C[Services\nAuth, CRM, Products, Inventory, Challans]
-  C --> D[(PostgreSQL)]
+```text
+Inventory → Work Order → Stock Check → Internal Transfer / Shortage → Customer Reservation
 ```
 
-## Tech Stack
-- Frontend: React, Vite, React Router, Axios
-- Backend: Node.js, Express, pg, bcryptjs, jsonwebtoken, cors, helmet, morgan, dotenv
-- Database: PostgreSQL
+## Technology stack
 
-## Repository Layout
-- `backend/` Express API and seed script
-- `frontend/` React admin UI
-- `docs/` API collection files
-- `DOCUMENTATION.md` this file
+- Frontend: React 18, Vite, React Router, Axios
+- Backend: Node.js, Express 5, PostgreSQL (`pg`)
+- Security: JWT, bcrypt, Helmet, CORS
+- Testing: Node.js built-in test runner with PostgreSQL integration tests
 
-## Backend Runtime
-- Entry point: `backend/src/server.js`
-- Environment: `backend/.env`
-- Health endpoint: `GET /api/health`
+## Modules
 
-## Authentication
-- `POST /api/auth/login`
-- `POST /api/auth/refresh`
-- `POST /api/auth/logout`
-- `GET /api/auth/me`
+- JWT login, refresh, logout, and current-user API
+- Roles: `ADMIN`, `OPERATIONS`, `SALES`
+- Inventory by item, category, location, and batch
+- Physical, reserved, and calculated available stock
+- Transactional stock adjustments with idempotency keys
+- Work orders with automatic shortage calculation
+- Internal transfers: Requested → Dispatched → Received
+- Customer orders that reserve available stock
+- Customer-order cancellation that releases reserved stock
 
-JWT access tokens are returned from login and attached by the frontend on API requests. Refresh tokens are kept in browser storage for the demo implementation.
+## Quick start
 
-## Roles
-- Admin: full access
-- Sales: customers and challans
-- Warehouse: products and inventory
-- Accounts: read access to operational data
+### 1. Configure the backend
 
-## Core Modules
-### Customers
-- Search by name, mobile, email, business name, GST
-- Create, update, view, delete
-- Follow-up notes
-- Pagination and filters
-
-### Products
-- CRUD for products, categories, warehouses
-- Low-stock visibility
-- Search and filtering
-
-### Inventory
-- IN and OUT stock movements
-- Prevent negative stock
-- Transactional updates
-
-### Challans
-- Draft challans do not reduce stock
-- Confirmed challans reduce stock and create OUT movements
-- Challan items store product snapshots
-- Insufficient stock rolls back the whole operation
-
-### Dashboard
-- Customer counts
-- Product counts
-- Low-stock counts
-- Draft and confirmed challan counts
-- Recent records tables
-
-## Setup
-### Backend
-```bash
+```powershell
 cd backend
-npm install
 copy .env.example .env
+npm install
+npm run db:init
 npm run seed
 npm run dev
 ```
 
-### Frontend
-```bash
+### 2. Configure the frontend
+
+```powershell
 cd frontend
 copy .env.example .env
 npm install
 npm run dev
 ```
 
-## Environment Variables
-### Backend
-- `PORT`
-- `NODE_ENV`
-- `DATABASE_URL`
-- `JWT_ACCESS_SECRET`
-- `JWT_REFRESH_SECRET`
-- `JWT_ACCESS_EXPIRES_IN`
-- `JWT_REFRESH_EXPIRES_IN`
-- `CORS_ORIGIN`
+The default local URLs are:
 
-### Frontend
-- `VITE_API_BASE_URL`
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8000`
+- Health check: `http://localhost:8000/api/health`
 
-## Demo Credentials
-- Admin: `admin` / `Admin@12345`
-- Sales: `sales1` / `Sales@12345`
-- Warehouse: `warehouse1` / `Warehouse@12345`
-- Accounts: `accounts1` / `Accounts@12345`
+## Environment variables
 
-## Deployment Notes
-- Frontend can be deployed on Vercel or Netlify.
-- Backend can be deployed on Render or another free-compatible Node host.
-- PostgreSQL can be hosted on Supabase or Neon.
-- Production backend entrypoint: `node src/server.js`
+Backend (`backend/.env`):
 
-## API Notes
-The React frontend expects the backend under `/api`. Keep that prefix stable if you change deployment paths.
+| Variable | Purpose |
+|---|---|
+| `PORT` | Backend listening port |
+| `NODE_ENV` | Runtime environment |
+| `DATABASE_URL` | PostgreSQL connection URL |
+| `JWT_ACCESS_SECRET` | Access-token signing secret |
+| `JWT_REFRESH_SECRET` | Refresh-token signing secret |
+| `JWT_ACCESS_EXPIRES_IN` | Access-token lifetime |
+| `JWT_REFRESH_EXPIRES_IN` | Refresh-token lifetime |
+| `CORS_ORIGIN` | One or more comma-separated frontend origins, or `*` for development |
 
-## Maintenance Notes
-- Keep `.env` out of git.
-- Keep JWT secrets unique per environment.
-- Use the seed script only for demo or reset workflows.
+Frontend (`frontend/.env`):
+
+| Variable | Purpose |
+|---|---|
+| `VITE_API_BASE_URL` | Backend API base URL, for example `http://localhost:8000/api` |
+
+## Demo users
+
+After `npm run seed`, use the accounts defined in `backend/scripts/seedDemo.js`:
+
+| Role | Username |
+|---|---|
+| Admin | `admin` |
+| Operations User | `operations1` |
+| Sales User | `sales1` |
+
+Use only the seed-script passwords in a local/demo environment. Do not use those credentials in production.
+
+## Tests
+
+The required integration suite uses a **disposable PostgreSQL database**:
+
+```powershell
+$env:TEST_DATABASE_URL = 'postgresql://...your-disposable-test-database...'
+npm test
+```
+
+The suite verifies reservation limits, transfer limits, receipt timing, repeated-receipt prevention, and authorization. It intentionally skips when `TEST_DATABASE_URL` is absent so it cannot modify a normal development database accidentally.
+
+## Documentation
+
+Read [DOCUMENTATION.md](DOCUMENTATION.md) for architecture, role permissions, business rules, database design, API/Postman instructions, testing, deployment, and a file map.
+
+Database ERD source for dbdiagram.io: [backend/docs/operations-erp.dbml](backend/docs/operations-erp.dbml)
+
+API reference: [backend/docs/API.md](backend/docs/API.md)
