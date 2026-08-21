@@ -31,6 +31,11 @@ npm run dev
 - `GET /api/inventory`
 - `GET /api/inventory/transactions`
 - `POST /api/inventory/adjustments`
+- `GET, POST /api/work-orders`
+- `PATCH /api/work-orders/:id/status`
+- `GET, POST /api/transfers`
+- `POST /api/transfers/:id/dispatch`
+- `POST /api/transfers/:id/receive`
 - `/api/health`
 
 ## Deployment Notes
@@ -40,4 +45,4 @@ npm run dev
 - Start with `npm start`
 
 ## Development Status
-The inventory stage provides location- and batch-level physical, reserved, and calculated available quantity. Manual adjustments are transactionally locked, cannot make available inventory negative, and require a unique idempotency key. Work orders, internal transfers, and customer reservations follow in later development stages.
+The inventory stage provides location- and batch-level physical, reserved, and calculated available quantity. Manual adjustments are transactionally locked, cannot make available inventory negative, and require a unique idempotency key. Work orders calculate shortages from the selected location. Internal transfers reduce source stock only at dispatch and increase destination stock only at receipt. Customer reservations follow in the final development stage.

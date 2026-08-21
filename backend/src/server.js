@@ -8,6 +8,8 @@ import { notFoundHandler, errorHandler } from './middleware/errorHandler.js'
 import authRoutes from './routes/authRoutes.js'
 import operationsMetaRoutes from './routes/operationsMetaRoutes.js'
 import inventoryRoutes from './routes/inventoryRoutes.js'
+import workOrderRoutes from './routes/workOrderRoutes.js'
+import transferRoutes from './routes/transferRoutes.js'
 
 const app = express()
 
@@ -28,6 +30,8 @@ app.get('/api/health', (request, response) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/meta', operationsMetaRoutes)
 app.use('/api/inventory', inventoryRoutes)
+app.use('/api/work-orders', workOrderRoutes)
+app.use('/api/transfers', transferRoutes)
 
 // 404 and error middleware must stay last so they catch all fallthroughs.
 app.use(notFoundHandler)
