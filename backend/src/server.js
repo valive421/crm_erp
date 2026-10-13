@@ -11,6 +11,7 @@ import customerRoutes from './routes/customerRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import inventoryRoutes from './routes/inventoryRoutes.js'
 import challanRoutes from './routes/challanRoutes.js'
+import chatRoutes from './routes/chatRoutes.js'
 
 const app = express()
 
@@ -33,6 +34,7 @@ app.use('/api/customers', customerRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/inventory', inventoryRoutes)
 app.use('/api/challans', challanRoutes)
+app.use('/api/chat', chatRoutes)
 
 // 404 and error middleware must stay last so they catch all fallthroughs.
 app.use(notFoundHandler)

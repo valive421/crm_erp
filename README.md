@@ -16,6 +16,7 @@ The system supports:
 - Sales challan draft/confirm/cancel flows
 - Product snapshots for challan history
 - Dashboard statistics
+- Gemini chatbot (server-side API key only)
 
 ## Architecture
 
@@ -114,9 +115,17 @@ npm run dev
 - `JWT_ACCESS_EXPIRES_IN`
 - `JWT_REFRESH_EXPIRES_IN`
 - `CORS_ORIGIN`
+- `GEMINI_API_KEY`
 
 ### Frontend
 - `VITE_API_BASE_URL`
+
+## Gemini Chatbot Setup
+1. Add `GEMINI_API_KEY` to `backend/.env` (copy from `backend/.env.example`).
+2. Restart the backend server after changing environment variables.
+3. Sign in to the app and open **Gemini Chatbot** in the sidebar.
+
+The frontend calls `POST /api/chat/gemini`, and the backend forwards requests to Gemini. The API key is read only on the server and is never exposed to browser code.
 
 ## Demo Credentials
 - Admin: `admin` / `Admin@12345`

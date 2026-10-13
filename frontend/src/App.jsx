@@ -14,6 +14,7 @@ import ChallansPage from './pages/ChallansPage'
 import ChallanFormPage from './pages/ChallanFormPage'
 import ChallanDetailPage from './pages/ChallanDetailPage'
 import ProfilePage from './pages/ProfilePage'
+import GeminiChatPage from './pages/GeminiChatPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="/challans" element={<ChallansPage />} />
           <Route path="/challans/new" element={<ChallanFormPage mode="create" />} />
           <Route path="/challans/:id" element={<ChallanDetailPage />} />
+          <Route path="/chatbot" element={<GeminiChatPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Route>

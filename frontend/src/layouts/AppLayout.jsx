@@ -7,6 +7,7 @@ const navGroups = [
   { label: 'Products', to: '/products', roles: ['ADMIN', 'WAREHOUSE', 'ACCOUNTS', 'SALES'] },
   { label: 'Inventory', to: '/inventory', roles: ['ADMIN', 'WAREHOUSE'] },
   { label: 'Challans', to: '/challans', roles: ['ADMIN', 'SALES', 'ACCOUNTS', 'WAREHOUSE'] },
+  { label: 'Gemini Chatbot', to: '/chatbot', roles: ['ADMIN', 'SALES', 'WAREHOUSE', 'ACCOUNTS'] },
   { label: 'Profile', to: '/profile', roles: ['ADMIN', 'SALES', 'WAREHOUSE', 'ACCOUNTS'] },
 ]
 

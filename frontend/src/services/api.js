@@ -59,3 +59,7 @@ export const authApi = {
   logout: (refresh) => api.post('/auth/logout/', { refresh }),
   me: () => api.get('/auth/me/'),
 }
+
+export const chatApi = {
+  askGemini: (message) => api.post('/chat/gemini', { message }),
+}

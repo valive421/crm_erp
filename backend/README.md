@@ -36,7 +36,12 @@ npm run dev
 - `/api/challans`
 - `/api/challans/:id/confirm`
 - `/api/challans/:id/cancel`
+- `/api/chat/gemini`
 - `/api/health`
+
+## Gemini Configuration
+- Set `GEMINI_API_KEY` in `backend/.env`.
+- The backend uses this key for Gemini requests; do not place Gemini keys in frontend code.
 
 ## Deployment Notes
 - Run `npm install`
