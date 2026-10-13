@@ -1,14 +1,12 @@
 {
-  "name": "mini-operations-erp-backend",
+  "name": "mini-erp-crm-backend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "node src/server.js",
     "start": "node src/server.js",
-    "db:init": "node scripts/initDb.js",
-    "seed": "node scripts/seedDemo.js",
-    "test": "node --test"
+    "seed": "node scripts/seedDemo.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
