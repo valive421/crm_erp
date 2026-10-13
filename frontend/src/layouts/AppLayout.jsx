@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { MessageCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 const navGroups = [
@@ -7,7 +8,6 @@ const navGroups = [
   { label: 'Products', to: '/products', roles: ['ADMIN', 'WAREHOUSE', 'ACCOUNTS', 'SALES'] },
   { label: 'Inventory', to: '/inventory', roles: ['ADMIN', 'WAREHOUSE'] },
   { label: 'Challans', to: '/challans', roles: ['ADMIN', 'SALES', 'ACCOUNTS', 'WAREHOUSE'] },
-  { label: 'Gemini Chatbot', to: '/chatbot', roles: ['ADMIN', 'SALES', 'WAREHOUSE', 'ACCOUNTS'] },
   { label: 'Profile', to: '/profile', roles: ['ADMIN', 'SALES', 'WAREHOUSE', 'ACCOUNTS'] },
 ]
 
@@ -44,7 +44,17 @@ export default function AppLayout() {
             <h1>Wholesale Distribution ERP</h1>
             <p>Role: {user?.role}</p>
           </div>
-          <div className="user-chip">{user?.username}</div>
+          <div className="topbar-actions">
+            <NavLink
+              to="/chatbot"
+              className={({ isActive }) => `icon-button ${isActive ? 'active' : ''}`}
+              aria-label="Open Gemini Chatbot"
+              title="Open Gemini Chatbot"
+            >
+              <MessageCircle size={20} strokeWidth={2.2} aria-hidden="true" />
+            </NavLink>
+            <div className="user-chip">{user?.username}</div>
+          </div>
         </header>
         <main className="content-area">
           <Outlet />

@@ -93,6 +93,7 @@ JWT access tokens are returned from login and attached by the frontend on API re
 cd backend
 npm install
 copy .env.example .env
+npm run db:init
 npm run seed
 npm run dev
 ```
@@ -138,6 +139,26 @@ The frontend calls `POST /api/chat/gemini`, and the backend forwards requests to
 - Backend can be deployed on Render or another free-compatible Node host.
 - PostgreSQL can be hosted on Supabase or Neon.
 - Production backend entrypoint: `node src/server.js`
+
+### Render Backend
+The repository includes `render.yaml` for the API service. If configuring the existing Render service manually, set:
+
+- Root Directory: `backend`
+- Build Command: `npm install`
+- Start Command: `npm run db:init && npm run seed && npm start`
+- Health Check Path: `/api/health`
+
+Set `DATABASE_URL`, `CORS_ORIGIN`, and `GEMINI_API_KEY` in the Render environment. The Render service supplies `PORT` automatically.
+
+### Render Frontend
+The same `render.yaml` defines a static frontend service. If configuring it manually, set:
+
+- Root Directory: `frontend`
+- Build Command: `npm install && npm run build`
+- Publish Directory: `dist`
+- Environment Variable: `VITE_API_BASE_URL=https://YOUR-BACKEND.onrender.com/api`
+
+The SPA rewrite sends browser routes such as `/dashboard` and `/chatbot` to `index.html`.
 
 ## API Notes
 The React frontend expects the backend under `/api`. Keep that prefix stable if you change deployment paths.

@@ -5,11 +5,13 @@ Node.js and Express backend for the Mini ERP + CRM operations portal.
 ## Quick Start
 1. Install dependencies with `npm install`.
 2. Copy `.env.example` to `.env` and configure PostgreSQL and JWT secrets.
-3. Run the demo seed script.
-4. Start the API server.
+3. Initialize the PostgreSQL schema with `npm run db:init`.
+4. Run the demo seed script with `npm run seed`.
+5. Start the API server.
 
 ## Commands
 ```bash
+npm run db:init
 npm run seed
 npm run dev
 ```

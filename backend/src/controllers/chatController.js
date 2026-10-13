@@ -1,5 +1,6 @@
 import { env } from '../config/env.js'
 import { generateGeminiReply } from '../services/geminiService.js'
+import { getOperationsContext } from '../services/operationsContext.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
 import { failure } from '../utils/response.js'
 
@@ -21,6 +22,7 @@ export const askGemini = asyncHandler(async (request, response) => {
     return failure(response, 'Gemini chatbot is not configured. Set GEMINI_API_KEY on the server.', 503)
   }
 
-  const reply = await generateGeminiReply(message)
+  const operationsContext = await getOperationsContext(message)
+  const reply = await generateGeminiReply(message, globalThis.fetch, operationsContext)
   return response.json({ success: true, reply })
 })

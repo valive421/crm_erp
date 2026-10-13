@@ -1,6 +1,14 @@
 import { useState } from 'react'
 import { chatApi } from '../services/api'
 
+const suggestedQueries = [
+  'Which products are currently low on stock?',
+  'How many active customers do we have?',
+  'Show me the latest confirmed challans.',
+  'Which products have the highest current stock?',
+  'Summarize today\'s inventory movements.',
+]
+
 export default function GeminiChatPage() {
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState([])
@@ -28,6 +36,11 @@ export default function GeminiChatPage() {
     }
   }
 
+  const useSuggestedQuery = (query) => {
+    setMessage(query)
+    setError('')
+  }
+
   return (
     <div className="page-stack">
       <div className="panel header-row">
@@ -36,6 +49,20 @@ export default function GeminiChatPage() {
           <p>Ask operations questions and receive AI replies from the secure backend endpoint.</p>
         </div>
       </div>
+
+      <section className="panel suggestions-panel">
+        <div>
+          <h3>Try a database query</h3>
+          <p>Ask about customers, products, inventory, or challans.</p>
+        </div>
+        <div className="query-suggestions">
+          {suggestedQueries.map((query) => (
+            <button key={query} type="button" className="suggestion-button" onClick={() => useSuggestedQuery(query)}>
+              {query}
+            </button>
+          ))}
+        </div>
+      </section>
 
       <section className="panel chat-log" aria-live="polite">
         {messages.length === 0 ? <p className="empty-state">Start by asking Gemini a question.</p> : null}
