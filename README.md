@@ -161,7 +161,7 @@ The same `render.yaml` defines a static frontend service. If configuring it manu
 
 Add a rewrite rule from `/*` to `/index.html` with status `200` in the Render static site settings. This is required for browser refreshes on client-side routes such as `/dashboard` and `/inventory`.
 
-The frontend uses normal clean URLs. The Vite build also generates `dist/404.html` as a fallback for static hosts that serve a 404 document for unknown paths. Render should still have the rewrite from `/*` to `/index.html` configured in the static site settings.
+The frontend also uses hash-based routing, so after redeployment application URLs will look like `https://your-frontend.onrender.com/#/dashboard`. Refreshing these URLs does not require a server-side rewrite.
 
 The SPA rewrite sends browser routes such as `/dashboard` and `/chatbot` to `index.html`.
 
