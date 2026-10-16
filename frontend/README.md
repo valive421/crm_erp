@@ -26,5 +26,5 @@ The frontend expects the Express backend under the `/api` prefix.
 ## Notes
 - Authentication tokens are stored in browser storage for the demo build.
 - Update the API base URL when deploying the backend.
-- For Render static hosting, configure a rewrite from `/*` to `/index.html` with status `200` so refreshing routes such as `/dashboard` or `/inventory` loads the SPA instead of returning a 404. The repository includes this rule in `render.yaml` and `public/_redirects`.
-- The app uses hash-based routing (`/#/dashboard`) so direct refreshes remain reliable even when a static host has not applied its SPA rewrite rules.
+- For Render static hosting, configure a rewrite from `/*` to `/index.html` with status `200` so refreshing routes such as `/dashboard` or `/inventory` loads the SPA instead of returning a 404. The repository includes this rule in `render.yaml`.
+- The build also generates `dist/404.html`, which gives static hosts that serve a fallback document a working React entry point for direct route requests.
