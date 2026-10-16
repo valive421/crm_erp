@@ -73,6 +73,7 @@ JWT access tokens are returned from login and attached by the frontend on API re
 - IN and OUT stock movements
 - Prevent negative stock
 - Transactional updates
+- AI-assisted reorder recommendations based on 30-day demand, safety stock, and a seven-day lead-time buffer
 
 ### Challans
 - Draft challans do not reduce stock
@@ -157,6 +158,8 @@ The same `render.yaml` defines a static frontend service. If configuring it manu
 - Build Command: `npm install && npm run build`
 - Publish Directory: `dist`
 - Environment Variable: `VITE_API_BASE_URL=https://YOUR-BACKEND.onrender.com/api`
+
+Add a rewrite rule from `/*` to `/index.html` with status `200` in the Render static site settings. This is required for browser refreshes on client-side routes such as `/dashboard` and `/inventory`.
 
 The SPA rewrite sends browser routes such as `/dashboard` and `/chatbot` to `index.html`.
 

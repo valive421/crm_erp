@@ -3,6 +3,72 @@ import { failure } from '../utils/response.js'
 import { paginate, withTransaction } from '../services/dbHelpers.js'
 import { query } from '../config/db.js'
 
+const FORECAST_DAYS = 30
+const DEFAULT_LEAD_TIME_DAYS = 7
+
+export function calculateReorderRecommendation(product) {
+  const currentStock = Number(product.current_stock) || 0
+  const minimumStock = Number(product.minimum_stock_alert_quantity) || 0
+  const unitsSold = Number(product.units_sold) || 0
+  const movementDays = Number(product.movement_days) || 0
+  const averageDailyDemand = unitsSold / FORECAST_DAYS
+  const safetyStock = Math.max(minimumStock, averageDailyDemand * 2)
+  const reorderPoint = averageDailyDemand * DEFAULT_LEAD_TIME_DAYS + safetyStock
+  const targetStock = averageDailyDemand * (DEFAULT_LEAD_TIME_DAYS + FORECAST_DAYS) + safetyStock
+  const suggestedOrderQuantity = Math.max(0, Math.ceil(targetStock - currentStock))
+
+  return {
+    ...product,
+    current_stock: currentStock,
+    minimum_stock_alert_quantity: minimumStock,
+    units_sold: unitsSold,
+    average_daily_demand: Number(averageDailyDemand.toFixed(2)),
+    safety_stock: Number(safetyStock.toFixed(2)),
+    reorder_point: Number(reorderPoint.toFixed(2)),
+    suggested_order_quantity: suggestedOrderQuantity,
+    status: currentStock <= reorderPoint ? 'REORDER' : 'HEALTHY',
+    confidence: movementDays >= 20 ? 'HIGH' : movementDays >= 7 ? 'MEDIUM' : 'LOW',
+    movement_days: movementDays,
+  }
+}
+
+export const getOptimization = asyncHandler(async (request, response) => {
+  const result = await query(`
+    SELECT
+      p.id,
+      p.name,
+      p.sku,
+      p.current_stock,
+      p.minimum_stock_alert_quantity,
+      COALESCE(SUM(sm.quantity_changed) FILTER (WHERE sm.movement_type = 'OUT'), 0) AS units_sold,
+      COUNT(DISTINCT sm.created_at::date) FILTER (WHERE sm.movement_type = 'OUT') AS movement_days
+    FROM products_product p
+    LEFT JOIN inventory_stockmovement sm
+      ON sm.product_id = p.id
+      AND sm.created_at >= NOW() - INTERVAL '30 days'
+    GROUP BY p.id
+    ORDER BY
+      CASE WHEN p.current_stock <=
+        (COALESCE(SUM(sm.quantity_changed) FILTER (WHERE sm.movement_type = 'OUT'), 0) / 30 * 7)
+        + GREATEST(p.minimum_stock_alert_quantity, COALESCE(SUM(sm.quantity_changed) FILTER (WHERE sm.movement_type = 'OUT'), 0) / 30 * 2)
+      THEN 0 ELSE 1 END,
+      p.name ASC
+  `)
+
+  const recommendations = result.rows.map(calculateReorderRecommendation)
+  return response.json({
+    generated_at: new Date().toISOString(),
+    forecast_days: FORECAST_DAYS,
+    lead_time_days: DEFAULT_LEAD_TIME_DAYS,
+    results: recommendations,
+    summary: {
+      products: recommendations.length,
+      reorder: recommendations.filter((item) => item.status === 'REORDER').length,
+      healthy: recommendations.filter((item) => item.status === 'HEALTHY').length,
+    },
+  })
+})
+
 export const listMovements = asyncHandler(async (request, response) => {
   const result = await paginate('SELECT sm.id, sm.product_id AS product, p.name AS product_name, sm.quantity_changed, sm.movement_type, sm.reason, sm.created_by_id, sm.created_at, sm.updated_at FROM inventory_stockmovement sm JOIN products_product p ON p.id = sm.product_id ORDER BY sm.created_at DESC', [], { page: request.query.page || 1, pageSize: request.query.page_size || 10, countSql: 'SELECT COUNT(*)::int AS count FROM inventory_stockmovement' })
   return response.json(result)

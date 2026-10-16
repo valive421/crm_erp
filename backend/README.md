@@ -34,6 +34,7 @@ npm run dev
 - `/api/products/meta/categories`
 - `/api/products/meta/warehouses`
 - `/api/inventory`
+- `/api/inventory/optimization`
 - `/api/inventory/movements`
 - `/api/challans`
 - `/api/challans/:id/confirm`
@@ -54,3 +55,4 @@ npm run dev
 - Draft challans do not reduce stock.
 - Confirmed challans reduce stock transactionally.
 - Insufficient stock raises a 400 error and rolls back the entire challan confirmation.
+- Inventory optimization forecasts 30-day demand from `OUT` movements and recommends stock replenishment using a seven-day lead-time buffer.

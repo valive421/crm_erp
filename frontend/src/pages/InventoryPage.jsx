@@ -11,20 +11,30 @@ export default function InventoryPage() {
   const [form, setForm] = useState(initial)
   const [error, setError] = useState('')
   const [optimizationError, setOptimizationError] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const load = async () => {
-    const [movementResponse, productResponse, optimizationResponse] = await Promise.all([
-      api.get('/inventory/'),
-      api.get('/products/'),
-      api.get('/inventory/optimization'),
-    ])
+    setLoading(true)
+    setOptimizationError('')
+    const [movementResponse, productResponse] = await Promise.all([api.get('/inventory/'), api.get('/products/')])
     setMovements(movementResponse.data.results || movementResponse.data.data || movementResponse.data)
     setProducts(productResponse.data.results || productResponse.data.data || productResponse.data)
-    setOptimization(optimizationResponse.data)
+    try {
+      const optimizationResponse = await api.get('/inventory/optimization')
+      setOptimization(optimizationResponse.data)
+    } catch (optimizationRequestError) {
+      const message = optimizationRequestError.response?.data?.message || optimizationRequestError.message
+      setOptimizationError(`Optimization unavailable: ${message}`)
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
-    load().catch(() => setOptimizationError('Inventory optimization is temporarily unavailable.'))
+    load().catch((loadError) => {
+      setError(loadError.response?.data?.message || 'Unable to load inventory data.')
+      setLoading(false)
+    })
   }, [])
 
   const submit = async (event) => {
@@ -64,6 +74,7 @@ export default function InventoryPage() {
           {optimization ? <span className="status neutral">{optimization.summary.reorder} need reorder</span> : null}
         </div>
         {optimizationError ? <div className="error-banner">{optimizationError}</div> : null}
+        {loading ? <div className="loading-state">Loading inventory recommendations...</div> : null}
         {optimization ? (
           <Table
             emptyText="No products available for optimization."
