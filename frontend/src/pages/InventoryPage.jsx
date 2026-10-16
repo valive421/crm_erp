@@ -7,16 +7,25 @@ const initial = { product: '', quantity_changed: '', movement_type: 'IN', reason
 export default function InventoryPage() {
   const [movements, setMovements] = useState([])
   const [products, setProducts] = useState([])
+  const [optimization, setOptimization] = useState(null)
   const [form, setForm] = useState(initial)
   const [error, setError] = useState('')
+  const [optimizationError, setOptimizationError] = useState('')
 
   const load = async () => {
-    const [movementResponse, productResponse] = await Promise.all([api.get('/inventory/'), api.get('/products/')])
+    const [movementResponse, productResponse, optimizationResponse] = await Promise.all([
+      api.get('/inventory/'),
+      api.get('/products/'),
+      api.get('/inventory/optimization'),
+    ])
     setMovements(movementResponse.data.results || movementResponse.data.data || movementResponse.data)
     setProducts(productResponse.data.results || productResponse.data.data || productResponse.data)
+    setOptimization(optimizationResponse.data)
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    load().catch(() => setOptimizationError('Inventory optimization is temporarily unavailable.'))
+  }, [])
 
   const submit = async (event) => {
     event.preventDefault()
@@ -46,6 +55,31 @@ export default function InventoryPage() {
         {error ? <div className="error-banner">{error}</div> : null}
         <button className="primary-button">Save Movement</button>
       </form>
+      <div className="panel">
+        <div className="section-header">
+          <div>
+            <h3>AI Inventory Optimization</h3>
+            <p>Demand-based reorder recommendations from the last 30 days of stock-out movements.</p>
+          </div>
+          {optimization ? <span className="status neutral">{optimization.summary.reorder} need reorder</span> : null}
+        </div>
+        {optimizationError ? <div className="error-banner">{optimizationError}</div> : null}
+        {optimization ? (
+          <Table
+            emptyText="No products available for optimization."
+            columns={[
+              { key: 'name', title: 'Product', render: (row) => <><strong>{row.name}</strong><br /><small>{row.sku}</small></> },
+              { key: 'current_stock', title: 'Stock' },
+              { key: 'average_daily_demand', title: 'Daily demand' },
+              { key: 'reorder_point', title: 'Reorder point' },
+              { key: 'suggested_order_quantity', title: 'Suggested order' },
+              { key: 'confidence', title: 'Confidence' },
+              { key: 'status', title: 'Status', render: (row) => <span className={`status ${row.status === 'REORDER' ? 'warning' : 'success'}`}>{row.status}</span> },
+            ]}
+            rows={optimization.results}
+          />
+        ) : null}
+      </div>
       <div className="panel">
         <h3>Recent Movements</h3>
         <Table

@@ -28,16 +28,17 @@ export default function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="brand large">Mini ERP CRM</div>
-        <h2>Secure access for operations teams</h2>
-        <p>Sign in with your role-based demo account.</p>
+        <div className="login-kicker">Operations workspace</div>
+        <h2>Welcome back</h2>
+        <p>Sign in to manage customers, products, inventory and sales documents.</p>
         <form onSubmit={handleSubmit} className="stack-form">
-          <label>
-            Username
-            <input value={username} onChange={(e) => setUsername(e.target.value)} />
+          <label className="form-field">
+            <span>Username</span>
+            <input autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} />
           </label>
-          <label>
-            Password
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <label className="form-field">
+            <span>Password</span>
+            <input autoComplete="current-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </label>
           {error ? <div className="error-banner">{error}</div> : null}
           <button className="primary-button" disabled={loading}>{loading ? 'Signing in...' : 'Login'}</button>
